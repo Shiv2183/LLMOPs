@@ -1,0 +1,31 @@
+version: '3.8' # Specify the version of Docker Compose
+
+services:
+  ollama:
+    image: ollama/ollama # Use the ollama image
+    ports:
+      - "11434:11434" # Map port 11434 on the host to port 11434 on the container
+    volumes:
+      - ollama:/root/.ollama # Mount the ollama volume to /root/.ollama in the container
+    container_name: ollama # Name the container 'ollama'
+    restart: always # Always restart the container if it stops
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:ollama # Use the open-webui image from GitHub Container Registry
+    ports:
+      - "3000:8080" # Map port 3000 on the host to port 8080 on the container
+    volumes:
+      - ollama:/root/.ollama # Mount the shared ollama volume to /root/.ollama in the container
+      - open-webui:/app/backend/data # Mount the open-webui volume to /app/backend/data in the container
+    restart: always # Always restart the container if it stops
+    container_name: open-webui # Name the container 'open-webui'
+    depends_on:
+      - ollama # Ensure the ollama service is started before this service
+    environment:
+      OLLAMA_API_BASE_URL: http://ollama:11434 # Set the OLLAMA_API_BASE_URL environment variable
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+volumes:
+  ollama: # Define the ollama volume
+  open-webui: # Define the open-webui volume
