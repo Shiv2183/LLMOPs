@@ -1,4 +1,3 @@
-import sys
 from crewai import Agent, Task, LLM
 import os
 from dotenv import load_dotenv
@@ -18,19 +17,15 @@ load_dotenv()
 #     base_url="http://localhost:11434"
 # )
 
-import json
+# default_llm = LLM(
+#     model=os.getenv('LITELLM_MODEL'),
+#     vertex_credentials=os.getenv('GEMINI_API_KEY'),
+#     temperature=0.7
+# )
 
-file_path = './vertex_ai_service_account.json'
-
-# Load the JSON file
-with open(file_path, 'r') as file:
-    vertex_credentials = json.load(file)
-
-# Convert the credentials to a JSON string
-vertex_credentials_json = json.dumps(vertex_credentials)
 default_llm = LLM(
-    model="gemini/gemini-2.0-flash",
-    vertex_credentials=vertex_credentials_json
+    model="groq/mistral-saba-24b",
+    temperature=0.7
 )
 
 
